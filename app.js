@@ -5,9 +5,26 @@ const PICKUP_RESERVE_PERCENT = 0.4;
 const PICKUP_MAPS_TEXT = "RECOGIDA_PRESENCIAL";
 const WHATSAPP_LOCATION_TEXT = "Ubicación por WhatsApp";
 const WHATSAPP_LOCATION_MAPS_TEXT = "UBICACION_POR_WHATSAPP";
-const PICKUP_VIDEO_URL = "https://drive.google.com/file/d/198VXUDfeyfouT7UauXBytVwyqbujxCn9/view?usp=sharing";
-const MAPS_TUTORIAL_URL = "";
-const WHATSAPP_TUTORIAL_URL = "";
+const PICKUP_VIDEO_URL = "assets/tutoriales/recogida-presencial.mp4";
+const MAPS_TUTORIAL_URL = "assets/tutoriales/ubicacion-google-maps.mp4";
+const WHATSAPP_TUTORIAL_URL = "assets/tutoriales/ubicacion-whatsapp.mp4";
+const TUTORIAL_META = {
+  whatsapp: {
+    title: "Cómo compartir tu ubicación por WhatsApp",
+    text: "En este video corto verás cómo enviar tu ubicación exacta por WhatsApp para facilitar la entrega de tu pedido.",
+    duration: "27 s"
+  },
+  maps: {
+    title: "Cómo compartir tu ubicación con Google Maps",
+    text: "En este video corto verás cómo copiar el enlace de tu ubicación en Google Maps y pegarlo correctamente en el pedido.",
+    duration: "34 s"
+  },
+  pickup: {
+    title: "Cómo funciona la recogida presencial",
+    text: "En este video corto te mostramos el funcionamiento de la recogida presencial y el punto de encuentro para recibir tu pedido.",
+    duration: "37 s"
+  }
+};
 
 const WHATSAPP_NUMBER = "573028473086";
 const ORDER_API_URL = "https://amared-orders.amaredpostres.workers.dev/";
@@ -532,6 +549,11 @@ const btnMapsTutorial = document.getElementById("btnMapsTutorial");
 const btnWaTutorial = document.getElementById("btnWaTutorial");
 const btnPickupTutorial = document.getElementById("btnPickupTutorial");
 const pickupVideoHint = document.getElementById("pickupVideoHint");
+const tutorialModal = document.getElementById("tutorialModal");
+const btnCloseTutorial = document.getElementById("btnCloseTutorial");
+const tutorialModalTitle = document.getElementById("tutorialModalTitle");
+const tutorialModalText = document.getElementById("tutorialModalText");
+const tutorialVideo = document.getElementById("tutorialVideo");
 const pickupPreviewTotal = document.getElementById("pickupPreviewTotal");
 const pickupPreviewReserve = document.getElementById("pickupPreviewReserve");
 const pickupPreviewBalance = document.getElementById("pickupPreviewBalance");
@@ -744,6 +766,14 @@ function getPickupVideoUrl(){
   return getTutorialUrl("pickup");
 }
 
+function getTutorialMeta(type){
+  return TUTORIAL_META[String(type || "").trim()] || {
+    title: "Tutorial AMARED",
+    text: "Mira esta guía rápida y continúa tu pedido cuando termines.",
+    duration: ""
+  };
+}
+
 function syncTutorialButtonsUI(){
   [
     [btnMapsTutorial, "maps"],
@@ -761,13 +791,39 @@ function syncTutorialButtonsUI(){
   }
 }
 
+function closeTutorialModal(){
+  if(!tutorialModal) return;
+  tutorialModal.classList.add("hidden");
+  tutorialModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("tutorialModalOpen");
+  if(tutorialVideo){
+    try{ tutorialVideo.pause(); }catch(_e){}
+    tutorialVideo.removeAttribute("src");
+    try{ tutorialVideo.load(); }catch(_e){}
+  }
+}
+
 function openTutorial(type){
   const url = getTutorialUrl(type);
   if(!url){
-    showAlert("Aún no hemos configurado el video tutorial de esta opción. Cuando tengas el enlace, solo debes pegarlo en app.js.");
+    showAlert("Este tutorial aún no está disponible.");
     return;
   }
-  window.open(url, "_blank", "noopener,noreferrer");
+  const meta = getTutorialMeta(type);
+  if(!tutorialModal || !tutorialVideo){
+    window.open(url, "_blank", "noopener,noreferrer");
+    return;
+  }
+  if(tutorialModalTitle) tutorialModalTitle.textContent = meta.title;
+  if(tutorialModalText) tutorialModalText.textContent = meta.text;
+  tutorialVideo.src = url;
+  tutorialModal.classList.remove("hidden");
+  tutorialModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("tutorialModalOpen");
+  try{ tutorialVideo.load(); }catch(_e){}
+  window.setTimeout(() => {
+    tutorialVideo.play?.().catch?.(() => {});
+  }, 80);
 }
 
 function setAddressMode(mode){
@@ -1867,6 +1923,15 @@ btnOpenMaps?.addEventListener("click", openGoogleMaps);
 btnMapsTutorial?.addEventListener("click", ()=> openTutorial("maps"));
 btnWaTutorial?.addEventListener("click", ()=> openTutorial("whatsapp"));
 btnPickupTutorial?.addEventListener("click", ()=> openTutorial("pickup"));
+btnCloseTutorial?.addEventListener("click", closeTutorialModal);
+tutorialModal?.addEventListener("click", (event) => {
+  if(event.target === tutorialModal) closeTutorialModal();
+});
+document.addEventListener("keydown", (event) => {
+  if(event.key === "Escape" && tutorialModal && !tutorialModal.classList.contains("hidden")){
+    closeTutorialModal();
+  }
+});
 
 document.querySelectorAll('input[name="locMethod"]').forEach(r => {
   r.addEventListener("change", syncLocationUI);

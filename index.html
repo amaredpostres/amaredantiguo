@@ -109,7 +109,7 @@
               <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
               <span class="socialDockLabel">TikTok</span>
             </button>
-            <button class="socialIconBtn socialWhatsApp" type="button" data-social-url="https://wa.me/573152077527" aria-label="Escribir a AMARED por WhatsApp">
+            <button class="socialIconBtn socialWhatsApp" type="button" data-social-url="https://wa.me/573028473086" aria-label="Escribir a AMARED por WhatsApp">
               <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
               <span class="socialDockLabel">WhatsApp</span>
             </button>
@@ -222,6 +222,10 @@
 
                 <div id="waLocBlock" class="waLocBlock muted small tileDetail">
                   <div class="waLocCopy">Escribe tu dirección o punto de referencia en este formulario. Cuando se abra WhatsApp, podremos guiarte para compartir la ubicación exacta si lo necesitas.</div>
+                  <div class="tutorialHelper">
+                    <strong>Video corto · 27 s</strong>
+                    <span>Mira cómo compartir tu ubicación exacta por WhatsApp sin salir del proceso de pedido.</span>
+                  </div>
                   <div class="tutorialAction">
                     <button id="btnWaTutorial" class="btn tutorialBtn" type="button">Ver tutorial</button>
                   </div>
@@ -240,10 +244,14 @@
                     <input id="maps" class="input" type="url" placeholder="Pega aquí el link de tu ubicación" />
                     <button id="btnOpenMaps" class="btn secondary" type="button">Abrir Maps</button>
                   </div>
+                  <div class="muted small">Abre Google Maps, toca compartir, copia el enlace y pégalo aquí.</div>
+                  <div class="tutorialHelper">
+                    <strong>Video corto · 34 s</strong>
+                    <span>Te mostramos dónde copiar el enlace de Google Maps y cómo pegarlo correctamente aquí.</span>
+                  </div>
                   <div class="tutorialAction">
                     <button id="btnMapsTutorial" class="btn tutorialBtn" type="button">Ver tutorial</button>
                   </div>
-                  <div class="muted small">Abre Google Maps, toca compartir, copia el enlace y pégalo aquí.</div>
                 </div>
 
                 <label class="radioRow deliveryTile">
@@ -283,10 +291,13 @@
                       </div>
                     </details>
 
-                    <div class="pickupActions">
-                      <button id="btnPickupTutorial" class="btn tutorialBtn" type="button">Ver tutorial de recogida</button>
+                    <div id="pickupVideoHint" class="tutorialHelper">
+                      <strong>Video corto · 37 s</strong>
+                      <span>Mira cómo funciona la recogida presencial, el punto de encuentro y la entrega del pedido.</span>
                     </div>
-                    <div id="pickupVideoHint" class="muted small">Aquí encontrarás una guía breve para llegar, ubicar el punto y reclamar tu pedido.</div>
+                    <div class="pickupActions">
+                      <button id="btnPickupTutorial" class="btn tutorialBtn" type="button">Ver tutorial</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -379,6 +390,25 @@
         </div>
       </section>
     </main>
+  </div>
+
+  <div id="tutorialModal" class="modalOverlay tutorialModalOverlay hidden" aria-hidden="true">
+    <div class="modal tutorialModal" role="dialog" aria-modal="true" aria-labelledby="tutorialModalTitle">
+      <div class="modalHeader tutorialModalHeader">
+        <div>
+          <div class="tutorialModalKicker">Tutorial AMARED</div>
+          <h3 id="tutorialModalTitle" class="modalTitle">Tutorial</h3>
+        </div>
+        <button id="btnCloseTutorial" class="iconBtn" type="button" aria-label="Cerrar tutorial">✕</button>
+      </div>
+      <div class="modalBody tutorialModalBody">
+        <p id="tutorialModalText" class="tutorialModalText"></p>
+        <div class="tutorialVideoShell">
+          <video id="tutorialVideo" class="tutorialVideo" controls playsinline preload="metadata"></video>
+        </div>
+        <div class="tutorialModalHint">Puedes cerrar el tutorial cuando quieras y continuar tu pedido exactamente donde estabas.</div>
+      </div>
+    </div>
   </div>
 
   <div id="confirmModal" class="modalOverlay hidden" aria-hidden="true">
@@ -583,6 +613,6 @@
   </div>
 
   <script src="routes-data.js?v=20260513-barrios-fuzzy"></script>
-  <script src="app.js?v=20260602-private-access-v46" defer></script>
+  <script src="app.js?v=20260918-tutoriales-v17" defer></script>
 </body>
 </html>
